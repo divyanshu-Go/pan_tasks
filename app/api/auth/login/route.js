@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { email, password } = await req.json();
+    const { email, password, role } = await req.json();
 
     await DbConnect();
     
@@ -16,6 +16,14 @@ export async function POST(req) {
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    }
+
+    // 🔹 Check if role matches the user's actual role in DB
+    if (role && user.role !== role) {
+      return NextResponse.json(
+        { error: `Invalid role selected for this account` },
+        { status: 403 }
+      );
     }
 
     const isValid = await verifyPassword(password, user.password);

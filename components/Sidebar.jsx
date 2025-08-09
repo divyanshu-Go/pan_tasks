@@ -4,7 +4,8 @@ import React, { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import CreateAndProfile from "./CreateAndProfile";
 import axios from "axios";
-import { LogOut } from "lucide-react";
+import { LogIn, LogOut } from "lucide-react";
+import Link from "next/link";
 
 export default function Sidebar({ user, open, setOpen, toggleRef }) {
   const pathname = usePathname();
@@ -69,7 +70,7 @@ export default function Sidebar({ user, open, setOpen, toggleRef }) {
 
       {/* Bottom - Actions & Logout */}
       <div className="p-4 flex items-center gap-4 border-t border-orange-100">
-        {user && (
+        {user ? (
           <button
             className="flex items-center bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium transition"
             onClick={handleLogout}
@@ -77,7 +78,17 @@ export default function Sidebar({ user, open, setOpen, toggleRef }) {
             <LogOut className="w-4 h-4 mr-2" />
             Logout
           </button>
-        )}
+        ):
+        (
+          <Link
+            className="flex items-center bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition"
+            href='/login'
+          >
+            <LogIn className="w-4 h-4 mr-2" />
+            Login
+          </Link>
+        )
+        }
         <CreateAndProfile user={user} />
       </div>
     </aside>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import { User, LogOut, Edit, Pencil, Folders } from "lucide-react";
@@ -93,26 +93,28 @@ const ProfileDashboard = ({ user }) => {
               {/* Create */}
               <button
                 className="flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium transition"
-                onClick={() => router.push("/add-component")}
+                onClick={() => router.push("/creat-task")}
               >
                 <Pencil className="w-4 h-4 mr-2" />
-                Create
+                Create Task
               </button>
 
-              {/* Admin Switch */}
-              {user.role === "admin" && (
+              {/* Dashboard Switch */}
+              {user.role === "admin" ? (
                 <button
                   className="flex items-center border border-orange-400 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
-                  onClick={() =>
-                    pathname === "/profile"
-                      ? router.push("/admin-profile")
-                      : router.push("/profile")
-                  }
+                  onClick={() => router.push("/admin-dashboard")}
                 >
                   <Folders className="w-4 h-4 mr-2" />
-                  {pathname === "/profile"
-                    ? "Manage All Submissions"
-                    : "Your Submission"}
+                  Admin Dashboard
+                </button>
+              ) : (
+                <button
+                  className="flex items-center border border-orange-400 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
+                  onClick={() => router.push("/user-dashboard")}
+                >
+                  <Folders className="w-4 h-4 mr-2" />
+                  User Dashboard
                 </button>
               )}
             </div>

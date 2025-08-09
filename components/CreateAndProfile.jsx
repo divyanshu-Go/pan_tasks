@@ -18,9 +18,7 @@ export default function CreateAndProfile({ user }) {
           <Link
             href={
               user
-                ? user.role === "admin"
-                  ? "/admin-profile"
-                  : "/profile"
+                ?  "/profile"
                 : "/login"
             }
           >

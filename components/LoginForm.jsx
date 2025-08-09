@@ -10,6 +10,7 @@ export const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    role: "user", // default role
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +19,7 @@ export const LoginForm = () => {
     const newErrors = {};
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.role) newErrors.role = "Please select a role";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -41,7 +43,7 @@ export const LoginForm = () => {
       }
 
       if (data.user.role === "admin") {
-        window.location.href = "/admin-profile";
+        window.location.href = "/profile";
       } else {
         window.location.href = "/";
       }
@@ -59,6 +61,7 @@ export const LoginForm = () => {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Email Input */}
         <FormInput
           label="Email"
           type="email"
@@ -69,6 +72,7 @@ export const LoginForm = () => {
           error={errors.email}
         />
 
+        {/* Password Input */}
         <FormInput
           label="Password"
           type="password"
@@ -79,20 +83,42 @@ export const LoginForm = () => {
           error={errors.password}
         />
 
+        {/* Role Selector */}
+        <div className="text-sm space-y-1">
+          <label className="font-medium">Login As</label>
+          <select
+            value={formData.role}
+            onChange={(e) =>
+              setFormData({ ...formData, role: e.target.value })
+            }
+            className={`w-full border px-3 py-2 rounded text-sm ${
+              errors.role ? "border-red-400" : "border-gray-300"
+            } focus:outline-none focus:ring-1 focus:ring-orange-500`}
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+          {errors.role && (
+            <span className="text-red-500 text-xs bg-red-100 px-2 py-1 rounded">
+              {errors.role}
+            </span>
+          )}
+        </div>
+
+        {/* Error Message */}
         {errors.submit && (
           <div className="text-sm text-red-600 bg-red-100 px-3 py-2 rounded">
             {errors.submit}
           </div>
         )}
 
+        {/* Submit Button */}
         <AuthButton isLoading={isLoading}>Log In</AuthButton>
 
+        {/* Sign Up Link */}
         <p className="text-sm text-center text-gray-600 mt-3">
           Don&apos;t have an account?{" "}
-          <Link
-            href="/signup"
-            className="text-orange-600 hover:underline"
-          >
+          <Link href="/signup" className="text-orange-600 hover:underline">
             Sign up
           </Link>
         </p>

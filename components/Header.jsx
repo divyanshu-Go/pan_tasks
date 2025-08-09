@@ -9,9 +9,9 @@ export default function Header({ user, open, setOpen, toggleRef }) {
   const pathname = usePathname();
 
   const navLinks = [
-    { name: "Elements", href: "/elements" },
     { name: "Home", href: "/" },
-    { name: "About Us", href: "/about" },
+    { name: "User", href: "/user" },
+    { name: "Task", href: "/task" },
   ];
 
   const isActive = (href) => {
