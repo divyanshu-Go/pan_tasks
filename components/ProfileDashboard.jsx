@@ -75,7 +75,7 @@ const ProfileDashboard = ({ user }) => {
               {/* Edit Profile */}
               <button
                 className="flex items-center border border-orange-400 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
-                onClick={() => router.push("/profile/edit")}
+                onClick={() => router.push(`/manage-user/${user._id}/edit`)}
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile

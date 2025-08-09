@@ -3,6 +3,7 @@ import EditUserForm from "@/components/admin/EditUserForm";
 
 export default async function EditUserPage({ params }) {
   const user = await getUserById(params.id);
+  console.log(user)
 
   if (!user) {
     return (

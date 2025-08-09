@@ -69,6 +69,7 @@ export default function EditUserForm({ user }) {
       </div>
 
       {/* Role */}
+      {user.role == 'admin' &&
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Role</label>
         <select
@@ -81,7 +82,7 @@ export default function EditUserForm({ user }) {
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
-      </div>
+      </div>}
 
       {/* Error */}
       {error && (

@@ -11,7 +11,7 @@ export default function Header({ user, open, setOpen, toggleRef }) {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "User", href: "/user" },
-    { name: "Task", href: "/task" },
+    { name: "Task", href: "/tasks" },
   ];
 
   const isActive = (href) => {

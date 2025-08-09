@@ -4,8 +4,6 @@ import User from "@/models/user";
 import { hashPassword } from "@/lib/auth/password";
 import { NextResponse } from "next/server";
 
-
-
 // ✅ GET specific user (Admin only)
 export async function GET(req, { params }) {
   try {
@@ -17,8 +15,12 @@ export async function GET(req, { params }) {
     }
 
     const payload = await verifyToken(authCookie.value);
-    if (!payload || payload.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    if (!payload) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
+
+    if (payload.user.role !== "admin" && payload.user._id !== params.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     await DbConnect();
@@ -31,7 +33,10 @@ export async function GET(req, { params }) {
     return NextResponse.json({ user });
   } catch (error) {
     console.error("Get specific user error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -46,8 +51,12 @@ export async function PUT(req, { params }) {
     }
 
     const payload = await verifyToken(authCookie.value);
-    if (!payload || payload.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    if (!payload) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
+
+    if (payload.user.role !== "admin" && payload.user._id !== params.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const body = await req.json();
@@ -60,15 +69,23 @@ export async function PUT(req, { params }) {
       updateData.password = await hashPassword(password);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true }).select("-password");
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).select("-password");
     if (!updatedUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "User updated successfully", user: updatedUser });
+    return NextResponse.json({
+      message: "User updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
     console.error("Update user error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -83,10 +100,15 @@ export async function DELETE(req, { params }) {
     }
 
     const payload = await verifyToken(authCookie.value);
-    if (!payload || payload.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    if (!payload) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
+    if (payload.user.role !== "admin" && payload.user._id !== params.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    
     await DbConnect();
     const deletedUser = await User.findByIdAndDelete(id);
 
@@ -97,6 +119,9 @@ export async function DELETE(req, { params }) {
     return NextResponse.json({ message: "User deleted successfully" });
   } catch (error) {
     console.error("Delete user error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

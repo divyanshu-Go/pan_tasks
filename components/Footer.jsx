@@ -43,7 +43,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="/users"
+                href="/user"
                 className="hover:text-orange-700 transition-colors"
               >
                 Users
