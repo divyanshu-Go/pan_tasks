@@ -12,6 +12,7 @@ import {
   ClipboardList,
   UserCog,
   Plus,
+  LayoutDashboard,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -68,9 +69,9 @@ export default function Sidebar({ user, open, setOpen, toggleRef }) {
 
   if (user?.role === "admin") {
     menuItems.push({
-      href: "/manage-user",
-      label: "Manage Users",
-      icon: <UserCog className="w-4 h-4" />,
+      href: "/admin-dashboard",
+      label: "Admin Dashboard",
+      icon: <LayoutDashboard className="w-4 h-4" />,
     });
   }
 
