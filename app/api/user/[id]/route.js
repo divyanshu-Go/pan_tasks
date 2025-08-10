@@ -43,7 +43,7 @@ export async function GET(req, { params }) {
 // Update user (Admin only)
 export async function PUT(req, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const authCookie = req.cookies.get("auth_token");
 
     if (!authCookie) {
@@ -55,7 +55,7 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    if (payload.user.role !== "admin" && payload.user._id !== params.id) {
+    if (payload.user.role !== "admin" && payload.user._id !== id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -92,7 +92,7 @@ export async function PUT(req, { params }) {
 // Delete user (Admin only)
 export async function DELETE(req, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const authCookie = req.cookies.get("auth_token");
 
     if (!authCookie) {

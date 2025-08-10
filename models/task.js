@@ -31,10 +31,10 @@ const taskSchema = new mongoose.Schema(
     },
     attachments: [
       {
-        fileName: { type: String, required: true }, // Original name of the file
-        fileUrl: { type: String, required: true }, // Cloudinary secure URL
-        publicId: { type: String, required: true }, // Cloudinary's unique file ID (needed if you ever want to delete from Cloudinary)
-        resourceType: { type: String, default: "raw" }, // Could be 'raw', 'image', 'video' in Cloudinary
+        fileName: { type: String, required: true }, 
+        fileUrl: { type: String, required: true }, 
+        publicId: { type: String, required: true }, 
+        resourceType: { type: String, default: "raw" }, 
       },
     ],
     createdBy: {

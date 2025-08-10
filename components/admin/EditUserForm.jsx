@@ -29,7 +29,7 @@ export default function EditUserForm({ user }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update user");
 
-      router.push("/manage-user"); // Redirect back to Manage Users page
+      router.push("/user"); // Redirect back to Manage Users page
     } catch (err) {
       setError(err.message);
     } finally {
@@ -69,7 +69,7 @@ export default function EditUserForm({ user }) {
       </div>
 
       {/* Role */}
-      {user.role == 'admin' &&
+      
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Role</label>
         <select
@@ -82,7 +82,7 @@ export default function EditUserForm({ user }) {
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
-      </div>}
+      </div>
 
       {/* Error */}
       {error && (

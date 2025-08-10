@@ -1,11 +1,11 @@
-// app/tasks/page.js (or wherever your tasks page is)
-import TasksList from '@/components/TasksList';
+// app/manage-task/page.js
+import ManageTasksList from '@/components/ManageTasksList';
 import FilterControls from '@/components/FilterControls';
 import { getAllTasks } from '@/lib/api/api';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { AlertCircle } from 'lucide-react';
 
-export default async function TasksSSRPage({ searchParams }) {
+export default async function ManageTasksPage({ searchParams }) {
   // Await searchParams in Next.js 15+
   const params = await searchParams;
   
@@ -15,8 +15,7 @@ export default async function TasksSSRPage({ searchParams }) {
     priority: params?.priority || 'all'
   };
 
-  console.log('🔍 Page: Received search params:', params);
-  console.log('🔍 Page: Applied filters:', filters);
+  console.log('🔍 Manage Tasks Page: Applied filters:', filters);
 
   const tasksResult = await getAllTasks(filters);
 
@@ -24,6 +23,14 @@ export default async function TasksSSRPage({ searchParams }) {
     return (
       <div className="min-h-screen bg-orange-50 py-8">
         <div className="container mx-auto px-4">
+          <Link 
+            href="/tasks" 
+            className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Tasks
+          </Link>
+
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 flex items-center gap-2">
             <AlertCircle className="w-5 h-5" />
             <div>
@@ -45,9 +52,17 @@ export default async function TasksSSRPage({ searchParams }) {
     <div className="min-h-screen bg-orange-50 py-8">
       <div className="container mx-auto px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-orange-700">All Tasks</h1>
+          <Link 
+            href="/tasks" 
+            className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 mb-4"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Tasks
+          </Link>
+          
+          <h1 className="text-3xl font-bold text-orange-700">Manage Tasks</h1>
           <p className="text-gray-600 text-sm mt-1">
-            {count} task{count !== 1 ? 's' : ''} found
+            {count} task{count !== 1 ? 's' : ''} available for management
           </p>
         </div>
 
@@ -64,7 +79,7 @@ export default async function TasksSSRPage({ searchParams }) {
             </div>
           </div>
         ) : (
-          <TasksList tasks={tasks} />
+          <ManageTasksList tasks={tasks} />
         )}
       </div>
     </div>

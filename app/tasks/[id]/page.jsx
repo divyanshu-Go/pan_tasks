@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
 export default async function SingleTaskSSRPage({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const taskResult = await getTaskById(id);
 
   if (!taskResult.success) {

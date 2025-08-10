@@ -9,7 +9,7 @@ export async function GET(request, { params }) {
   try {
     await DbConnect();
     
-    const { id } = params;
+    const { id } = await params;
     console.log('📋 Fetching task:', id);
     
     // Validate ObjectId

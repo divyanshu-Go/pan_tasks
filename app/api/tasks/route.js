@@ -4,24 +4,41 @@ import Task from '@/models/task';
 import User from '@/models/user';
 import DbConnect from '@/lib/Db/DbConnect';
 
-// GET - Fetch all tasks
-export async function GET() {
+// GET - Fetch all tasks with optional filters
+export async function GET(request) {
   try {
     await DbConnect();
     
-    console.log('📋 Fetching all tasks...');
+    // Get filter parameters from URL
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+    const priority = searchParams.get('priority');
     
-    const tasks = await Task.find({})
+    console.log('📋 Fetching tasks with filters:', { status, priority });
+    
+    // Build filter object
+    const filter = {};
+    if (status && status !== 'all') {
+      filter.status = status;
+    }
+    if (priority && priority !== 'all') {
+      filter.priority = priority;
+    }
+    
+    console.log('🔍 Applied filter:', filter);
+    
+    const tasks = await Task.find(filter)
       .populate('assignedTo', 'name email') // Populate assigned user email
       .populate('createdBy', 'name email')  // Populate creator email
       .sort({ createdAt: -1 }); // Latest first
     
-    console.log(`✅ Found ${tasks.length} tasks`);
+    console.log(`✅ Found ${tasks.length} tasks after filtering`);
     
     return NextResponse.json({
       message: 'Tasks retrieved successfully',
       count: tasks.length,
-      tasks: tasks
+      tasks: tasks,
+      appliedFilters: { status, priority } // Include applied filters in response
     });
     
   } catch (error) {
@@ -57,7 +74,7 @@ export async function POST(request) {
       priority: body.priority || 'medium',
       dueDate: body.dueDate ? new Date(body.dueDate) : null,
       assignedTo: body.assignedTo || null,
-      attachments: body.attachments || [], // This will come from upload API
+      attachments: body.attachments || [], 
       createdBy: body.createdBy || null
     };
     

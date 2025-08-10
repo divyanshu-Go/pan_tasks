@@ -75,7 +75,7 @@ const ProfileDashboard = ({ user }) => {
               {/* Edit Profile */}
               <button
                 className="flex items-center border border-orange-400 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
-                onClick={() => router.push(`/manage-user/${user._id}/edit`)}
+                onClick={() => router.push(`/profile/${user._id}/edit`)}
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
@@ -93,14 +93,14 @@ const ProfileDashboard = ({ user }) => {
               {/* Create */}
               <button
                 className="flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium transition"
-                onClick={() => router.push("/creat-task")}
+                onClick={() => router.push("/create-task")}
               >
                 <Pencil className="w-4 h-4 mr-2" />
                 Create Task
               </button>
 
               {/* Dashboard Switch */}
-              {user.role === "admin" ? (
+              {user.role === "admin" && (
                 <button
                   className="flex items-center border border-orange-400 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
                   onClick={() => router.push("/admin-dashboard")}
@@ -108,15 +108,7 @@ const ProfileDashboard = ({ user }) => {
                   <Folders className="w-4 h-4 mr-2" />
                   Admin Dashboard
                 </button>
-              ) : (
-                <button
-                  className="flex items-center border border-orange-400 text-orange-500 hover:bg-orange-500 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
-                  onClick={() => router.push("/user-dashboard")}
-                >
-                  <Folders className="w-4 h-4 mr-2" />
-                  User Dashboard
-                </button>
-              )}
+              ) }
             </div>
           </div>
         </div>

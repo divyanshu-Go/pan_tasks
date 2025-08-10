@@ -4,37 +4,30 @@ import { verifyToken } from "@/lib/auth/token";
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // Paths allowed for guests (unauthenticated users)
+  // Define path groups
   const guestOnlyPaths = ["/login", "/signup"];
-
-  // Paths that require any logged-in user
-  const userOnlyPaths = ["/create-task", "/profile"];
-
-  // Paths that require admin role
-  const adminOnlyPaths = ["/admin-dashboard", "/manage-user"];
+  const adminOnlyPaths = ["/admin-dashboard", "/manage-user, /manage-task"];
+  const loggedInPaths = ["/create-task", "/profile"];
 
   const token = request.cookies.get("auth_token")?.value;
 
-  // 🚫 Redirect logged-in users away from guest-only paths
+  // 1️⃣ Guest-only pages: redirect logged-in users away
   if (token && guestOnlyPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // ✅ Public paths (anything not listed above)
-  const isUserPath = userOnlyPaths.some(path => pathname.startsWith(path));
+  // 2️⃣ Public paths (not in admin or logged-in restricted lists)
   const isAdminPath = adminOnlyPaths.some(path => pathname.startsWith(path));
-  const isGuestPath = guestOnlyPaths.some(path => pathname.startsWith(path));
-
-  if (!isUserPath && !isAdminPath && !isGuestPath) {
-    return NextResponse.next(); // accessible to everyone
+  const isLoggedInPath = loggedInPaths.some(path => pathname.startsWith(path));
+  if (!isAdminPath && !isLoggedInPath) {
+    return NextResponse.next();
   }
 
-  // 🔐 If trying to access user-only or admin-only path without login → redirect
-  if (!token && (isUserPath || isAdminPath)) {
+  // 3️⃣ Must be logged in to access admin or logged-in paths
+  if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 🛡️ Verify token and role for admin paths
   try {
     const payload = await verifyToken(token);
     if (!payload) {
@@ -43,12 +36,14 @@ export async function middleware(request) {
 
     const role = payload.user?.role || payload.role;
 
-    // Admin check
+    // 4️⃣ Admin-only pages
     if (isAdminPath && role !== "admin") {
       return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
 
+    // 5️⃣ Logged-in pages (admin or user are fine)
     return NextResponse.next();
+
   } catch (error) {
     console.error("Middleware error:", error);
     return NextResponse.redirect(new URL("/login", request.url));
